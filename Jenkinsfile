@@ -11,27 +11,27 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {  
-                bat 'docker build -t maheshur/nodeapp-cuban:%BUILD_NUMBER% .'
+                sh 'docker build -t maheshur/nodeapp-cuban:%BUILD_NUMBER% .'
             }
         }
         stage('Login to Docker Hub') {
             steps {
                 withCredentials([string(credentialsId: 'test-dockerhubpassword', variable: 'test-dockerhubpass')]) {
                     script {
-                        bat "docker login -u maheshur -p %test-dockerhubpass%"
+                        sh "docker login -u maheshur -p %test-dockerhubpass%"
                     }
                 }
             }
         }
         stage('Push Image') {
             steps {
-                bat 'docker push maheshur/nodeapp-cuban:%BUILD_NUMBER%'
+                sh 'docker push maheshur/nodeapp-cuban:%BUILD_NUMBER%'
             }
         }
     }
     post {
         always {
-            bat 'docker logout'
+            sh 'docker logout'
         }
     }
 }
